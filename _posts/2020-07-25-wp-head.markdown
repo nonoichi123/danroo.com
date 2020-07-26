@@ -1,0 +1,245 @@
+---
+layout: post
+comments: true
+title:  "wp_head関数で出力される要素を非表示にする"
+date:   2020-07-25 00:00:00 +0000
+categories: wordpress
+---
+Wordpressでは、headタグにmetaタグやlinkタグが自動で設定されるようになっています。
+便利な面もありますが、非表示にしたいというケースもあり、非表示にする方法をまとめました。
+
+#### 目次
+- [実行環境](#実行環境)
+- [反映方法](#反映方法)
+- [dns-prefetch](#dns-prefetch)
+    - [非表示にする方法](#非表示にする方法)
+- [wp-block-library-css](#wp-block-library-css)
+    - [非表示にする方法](#非表示にする方法-1)
+- [WordPressバージョン情報](#wordpressバージョン情報)
+    - [非表示にする方法](#非表示にする方法-2)
+- [Embed機能](#embed機能)
+    - [非表示にする方法](#非表示にする方法-3)
+- [alternate - application/json+oembed / text/xml+oembed](#alternate---applicationjsonoembed--textxmloembed)
+    - [非表示にする方法](#非表示にする方法-4)
+- [HTTPレスポンスヘッダー](#httpレスポンスヘッダー)
+    - [非表示にする方法](#非表示にする方法-5)
+- [フィード情報](#フィード情報)
+    - [非表示にする方法](#非表示にする方法-6)
+- [shortlink](#shortlink)
+    - [非表示にする方法](#非表示にする方法-7)
+- [script - window._wpemojiSettings](#script---window_wpemojisettings)
+    - [非表示にする方法](#非表示にする方法-8)
+- [stylesheet - img.emoji](#stylesheet---imgemoji)
+    - [非表示にする方法](#非表示にする方法-9)
+- [EditURI](#edituri)
+    - [非表示にする方法](#非表示にする方法-10)
+- [wlwmanifest](#wlwmanifest)
+    - [非表示にする方法](#非表示にする方法-11)
+
+## 実行環境
+
+```
+WordPress 5.4.2
+```
+
+## 反映方法
+
+wp-content/themes/twentytwenty/functions.php の「after_setup_theme」アクションに追記修正を行います。
+
+## dns-prefetch
+
+dns-prefetchは、httpsで非対応なので、不要。
+詳細は、[こちら](/technology/2020/07/25/about-dnsprefetch.html)をどうぞ。
+
+```html
+<link rel='dns-prefetch' href='//localhost' />
+<link rel='dns-prefetch' href='//s.w.org' />
+```
+
+#### 非表示にする方法
+
+```php
+add_filter('wp_resource_hints', function ($hints, $relation_type) {
+  if ('dns-prefetch' === $relation_type) {
+    return array_diff(wp_dependencies_unique_hosts(), $hints);
+  }
+  return $hints;
+}, 10, 2);
+```
+
+## wp-block-library-css
+
+Gutenberg用のCSSファイル を読み込む設定。
+Gutenbergを使わず、クラシックエディタを使っているため、非表示にする。
+
+```html
+<link rel='stylesheet' id='wp-block-library-css' href='http://localhost/wp-includes/css/dist/block-library/style.min.css?ver=5.4.2' type='text/css' media='all' />
+```
+
+#### 非表示にする方法
+
+```php
+add_filter('wp_enqueue_scripts', function () {
+  wp_dequeue_style('wp-block-library');
+});
+```
+
+## WordPressバージョン情報
+
+WordPressのバージョンを示すタグ。セキュリティの観点からも非表示にしたい。
+
+```html
+<meta name="generator" content="WordPress 5.4.2" />
+```
+
+#### 非表示にする方法
+
+```php
+remove_action('wp_head', 'wp_generator');
+```
+
+## Embed機能
+
+外部サイトの記事を引用した際、記事のURLを貼るだけで、
+タイトル、アイキャッチ画像、抜粋テキスト、サイトロゴ、サイトタイトルなどを取得し、表示する機能で利用。
+
+Embed機能を利用しないなら、不要。
+
+```html
+<link rel='https://api.w.org/' href='http://localhost/wp-json/' />
+```
+
+#### 非表示にする方法
+
+```php
+remove_action('wp_head', 'rest_output_link_wp_head');
+```
+
+## alternate - application/json+oembed / text/xml+oembed
+
+Embed機能 と同様。
+
+```html
+<link rel="alternate" type="application/json+oembed" href="http://localhost/wp-json/oembed/1.0/embed?url=http%3A%2F%2Flocalhost%2F2020%2F07%2Fhello-world%2F" />
+<link rel="alternate" type="text/xml+oembed" href="http://localhost/wp-json/oembed/1.0/embed?url=http%3A%2F%2Flocalhost%2F2020%2F07%2Fhello-world%2F&#038;format=xml" />
+```
+
+#### 非表示にする方法
+
+```php
+remove_action('wp_head', 'wp_oembed_add_discovery_links');
+remove_action('wp_head','wp_oembed_add_host_js');
+```
+
+## HTTPレスポンスヘッダー
+
+HTTPレスポンスヘッダーにwp-jsonの出力がされているので、
+Embed機能を利用しないなら、こちらも不要。
+
+```ruby
+Link: <http://localhost/wp-json/>; rel="https://api.w.org/"
+```
+
+#### 非表示にする方法
+
+```php
+remove_action('template_redirect', 'rest_output_link_header', 11 );
+```
+
+## フィード情報
+
+RSSフィードのURL。  
+RSSフィードを利用しないなら、不要。
+
+```html
+<link rel="alternate" type="application/rss+xml" title="example.com &raquo; フィード" href="http://localhost/feed/" />
+<link rel="alternate" type="application/rss+xml" title="example.com &raquo; コメントフィード" href="http://localhost/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="example.com &raquo; Hello world! のコメントのフィード" href="http://localhost/2020/07/hello-world/feed/" />
+```
+
+#### 非表示にする方法
+
+```php
+// add_theme_support('automatic-feed-links'); ← 記載されていたら、コメントアウトする
+remove_action('wp_head', 'feed_links_extra', 3);
+```
+
+## shortlink
+
+shortlinkとは、現在の記事の短縮された URL リンク。デフォルトでは /?p=1234 のような形式。
+
+```html
+<link rel='shortlink' href='http://localhost/?p=1' />
+```
+
+#### 非表示にする方法
+
+```php
+remove_action('wp_head', 'wp_shortlink_wp_head');
+```
+
+## script - window._wpemojiSettings
+
+絵文字を変換するためのタグ。  
+絵文字を利用しないであったり、画像として利用しているなら、不要。
+
+```html
+<script type="text/javascript">
+      window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/localhost\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.4.2"}};
+
+[以下省略]
+```
+
+#### 非表示にする方法
+
+```php
+remove_action('wp_head', 'print_emoji_detection_script', 7);
+```
+
+## stylesheet - img.emoji
+
+script - window._wpemojiSettings と同様。
+
+```html
+<style type="text/css">
+img.wp-smiley,
+img.emoji {
+
+[以下省略]
+```
+
+#### 非表示にする方法
+
+```php
+remove_action('wp_print_styles', 'print_emoji_styles');
+```
+
+## EditURI
+
+外部の投稿ツールからWordPressに登録する際に利用されるタグ。  
+外部から投稿しないなら不要。
+
+```html
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://localhost/xmlrpc.php?rsd" />
+```
+
+#### 非表示にする方法
+
+```php
+remove_action('wp_head', 'rsd_link');
+```
+
+## wlwmanifest
+
+Microsoft社が提供する「Windows Live Writer」からWordPressにブログ投稿する際に利用されるタグ。  
+「Windows Live Writer」を利用しないなら不要。
+
+```html
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://localhost/wp-includes/wlwmanifest.xml" /> 
+```
+
+#### 非表示にする方法
+
+```php
+remove_action('wp_head', 'wlwmanifest_link');
+```

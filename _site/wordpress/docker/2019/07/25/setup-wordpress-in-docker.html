@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link href="https://fonts.googleapis.com/css?family=Merriweather:300|Raleway:400,700" rel="stylesheet">
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<title>Docker でWordPress環境を作る - ののいち no ログ</title>
+<!-- Begin Jekyll SEO tag v2.1.0 -->
+<title>Docker でWordPress環境を作る - ののいち no ログ</title>
+<meta property="og:title" content="Docker でWordPress環境を作る" />
+<meta name="description" content="Docker を使って、WordPress環境を作りましたので、 Dockerのインストールから、WordPress初期画面表示までの流れをまとめました。" />
+<meta property="og:description" content="Docker を使って、WordPress環境を作りましたので、 Dockerのインストールから、WordPress初期画面表示までの流れをまとめました。" />
+<link rel="canonical" href="/wordpress/docker/2019/07/25/setup-wordpress-in-docker.html" />
+<meta property="og:url" content="/wordpress/docker/2019/07/25/setup-wordpress-in-docker.html" />
+<meta property="og:site_name" content="ののいち no ログ" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-07-25T09:00:00+09:00" />
+<script type="application/ld+json">
+{"@context": "http://schema.org",
+"@type": "BlogPosting",
+"headline": "Docker でWordPress環境を作る",
+"datePublished": "2019-07-25T09:00:00+09:00",
+"description": "Docker を使って、WordPress環境を作りましたので、 Dockerのインストールから、WordPress初期画面表示までの流れをまとめました。",
+"url": "/wordpress/docker/2019/07/25/setup-wordpress-in-docker.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-173547685-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'UA-173547685-1');
+	</script>
+
+	<script data-ad-client="ca-pub-9638052216153241" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script></head>
+
+<body>
+	<main class="container">
+		<section class="about">
+			<a href="/"><img src="/assets/portfolio.png" alt="nonoichi"></a>
+			<h2 class="nickname">nonoichi</h2>
+			<p class="tagline"></p>
+			<ul class="social">
+				<li>
+					<a href="https://github.com/nonoichi123"></a>
+						<i class="icon-github-circled"></i>
+					</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/nonoichi123">
+						<i class="icon-twitter-squared"></i>
+					</a>
+				</li>
+			</ul>
+			<p>&copy; 2020 All rights reserved</p>
+		</section>
+		<section class="content">
+			<div class="post-container">
+<a class="post-link" href="/wordpress/docker/2019/07/25/setup-wordpress-in-docker.html">
+	<h1 class="post-title">Docker でWordPress環境を作る</h1>
+</a>
+<div class="post-meta">
+	<ul class="post-categories"><li>WordPress</li><li>Docker</li></ul>
+	<div class="post-date"><i class="icon-calendar"></i>2019年07月25日</div>
+</div>
+<div class="post">
+	<p>Docker を使って、WordPress環境を作りましたので、
+Dockerのインストールから、WordPress初期画面表示までの流れをまとめました。</p>
+
+<h3 id="実行環境">実行環境</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MacOS 10.14.5
+Docker 2.0.0.3
+WordPress 5.2.2
+</code></pre></div></div>
+
+<h3 id="docker-ダウンロード">Docker ダウンロード</h3>
+
+<ul>
+  <li>会員登録またはログインを行う</li>
+</ul>
+
+<p>-「Get started with Docker Desktop」ボタンをクリック</p>
+
+<p><img src="/assets/images/setup-wordpress-in-docker/001.png" alt="Docker Site" /></p>
+
+<ul>
+  <li>「Download Docker Desktop for Mac」ボタンをクリックして、<a href="https://www.docker.com/">Docker</a> のダウンロードを行う</li>
+</ul>
+
+<p><img src="/assets/images/setup-wordpress-in-docker/002.png" alt="Docker Site" /></p>
+
+<h3 id="docker-インストール">Docker インストール</h3>
+
+<ul>
+  <li>
+    <p>ダウンロードされたら、dmgファイルを展開し、アプリケーションフォルダに移動</p>
+  </li>
+  <li>
+    <p>起動して、ログインを行う</p>
+  </li>
+</ul>
+
+<p><img src="/assets/images/setup-wordpress-in-docker/003.png" alt="Docker Site" /></p>
+
+<h3 id="wordpress-ダウンロード">WordPress ダウンロード</h3>
+
+<p>WprdPressをダウンロードする</p>
+
+<p><img src="/assets/images/setup-wordpress-in-docker/004.png" alt="Docker Site" /></p>
+
+<h3 id="docker起動設定ファイルを作成">Docker起動設定ファイルを作成</h3>
+
+<p>Docker起動設定ファイルを作成します。<br />
+Docker Composeという機能を利用します。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ vi docker-compose.yml
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>version: '2'
+
+services:
+   db:
+     image: mysql:5.6
+     volumes:
+       - db_data:/var/lib/mysql
+     ports:
+      - "3306:3306"
+     environment:
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wp_user
+       MYSQL_PASSWORD: password
+       MYSQL_ROOT_PASSWORD: password
+   wordpress:
+     depends_on:
+       - db
+     image: wordpress:latest
+     ports:
+       - "8080:80"
+     volumes:
+       - ./src:/var/www/html
+     environment:
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_USER: wp_user
+       WORDPRESS_DB_PASSWORD: password
+volumes:
+    db_data:
+</code></pre></div></div>
+
+<p>この設定で、以下のことを行なっています。<br />
+・mysql5.6とwordpressのDockerイメージを取得<br />
+・DB接続設定は、ユーザ名「wp_user」、パスワード「password」、<br />
+　データベース「wordpress」、Rootパスワード「password」を指定します。<br />
+・./src ディレクトリを、Dockerサーバの/var/www/html にマウントします。</p>
+
+<h3 id="dockerサーバ用ファイルを配置">Dockerサーバ用ファイルを配置</h3>
+
+<p>WordPressを解凍し、wordpress → srcにディレクトリ名を変更します。</p>
+
+<h3 id="サーバ起動">サーバ起動</h3>
+
+<p>Dockerを起動します。
+-d は、バックエンド起動オプションです。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker-compose up -d
+</code></pre></div></div>
+
+<h3 id="起動確認">起動確認</h3>
+
+<p>正常に起動されたら、起動確認をします。<br />
+Stateが「Up」となっていたら、正常に起動されています。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker-compose ps
+        Name                       Command               State           Ports         
+---------------------------------------------------------------------------------------
+wordpress_db_1          docker-entrypoint.sh mysqld      Up      0.0.0.0:3306-&gt;3306/tcp
+wordpress_wordpress_1   docker-entrypoint.sh apach ...   Up      0.0.0.0:8080-&gt;80/tcp  
+</code></pre></div></div>
+
+<h3 id="wordpress-表示確認">WordPress 表示確認</h3>
+
+<ul>
+  <li>http://localhost:8080 にアクセスし、正常に表示されたら、OKです。</li>
+</ul>
+
+<p><img src="/assets/images/setup-wordpress-in-docker/005.png" alt="Docker Site" /></p>
+
+<h3 id="コマンド集">コマンド集</h3>
+
+<h4 id="docker-イメージ起動">Docker イメージ起動</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker-compose up -d
+</code></pre></div></div>
+
+<h4 id="docker-イメージ停止">Docker イメージ停止</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker-compose stop
+</code></pre></div></div>
+
+<h4 id="docker-イメージ起動stop時に利用">Docker イメージ起動（stop時に利用）</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker-compose start
+</code></pre></div></div>
+
+<h4 id="docker-イメージ再起動">Docker イメージ再起動</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker-compose restart
+</code></pre></div></div>
+
+<h4 id="docker-イメージ削除">Docker イメージ削除</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker-compose rm
+</code></pre></div></div>
+
+<h4 id="docker-ログ確認">Docker ログ確認</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker-compose logs
+</code></pre></div></div>
+
+<h4 id="docker-イメージ確認">Docker イメージ確認</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker-compose images
+</code></pre></div></div>
+
+</div><div id="disqus_thread" style="margin-top:120px"></div>
+  <script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+     /*
+     var disqus_config = function () {
+     this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+     this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+     };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://blog-danroo-com.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+		</section>
+	</main>
+
+	
+	<!-- Ptengine  -->
+	<script type="text/javascript">
+		window._pt_lt = new Date().getTime();
+		window._pt_sp_2 = [];
+		_pt_sp_2.push("setAccount,6d777cd9");
+		var _protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+		(function () {
+			var atag = document.createElement("script");
+			atag.type = "text/javascript";
+			atag.async = true;
+			atag.src = _protocol + "js.ptengine.jp/6d777cd9.js";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(atag, s);
+		})();
+	</script>
+	<!-- Ptengine  --><script id="dsq-count-scr" src="//blog-danroo-com.disqus.com/count.js" async></script>
+</body>
+
+</html>

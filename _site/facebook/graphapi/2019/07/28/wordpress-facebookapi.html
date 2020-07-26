@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link href="https://fonts.googleapis.com/css?family=Merriweather:300|Raleway:400,700" rel="stylesheet">
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<title>facebook Graph API を使って、フィードを取得する - ののいち no ログ</title>
+<!-- Begin Jekyll SEO tag v2.1.0 -->
+<title>facebook Graph API を使って、フィードを取得する - ののいち no ログ</title>
+<meta property="og:title" content="facebook Graph API を使って、フィードを取得する" />
+<meta name="description" content="facebook Graph API を使って、Facebookページのフィード情報を取得する流れを整理しました。" />
+<meta property="og:description" content="facebook Graph API を使って、Facebookページのフィード情報を取得する流れを整理しました。" />
+<link rel="canonical" href="/facebook/graphapi/2019/07/28/wordpress-facebookapi.html" />
+<meta property="og:url" content="/facebook/graphapi/2019/07/28/wordpress-facebookapi.html" />
+<meta property="og:site_name" content="ののいち no ログ" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-07-28T09:00:00+09:00" />
+<script type="application/ld+json">
+{"@context": "http://schema.org",
+"@type": "BlogPosting",
+"headline": "facebook Graph API を使って、フィードを取得する",
+"datePublished": "2019-07-28T09:00:00+09:00",
+"description": "facebook Graph API を使って、Facebookページのフィード情報を取得する流れを整理しました。",
+"url": "/facebook/graphapi/2019/07/28/wordpress-facebookapi.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-173547685-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'UA-173547685-1');
+	</script>
+
+	<script data-ad-client="ca-pub-9638052216153241" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script></head>
+
+<body>
+	<main class="container">
+		<section class="about">
+			<a href="/"><img src="/assets/portfolio.png" alt="nonoichi"></a>
+			<h2 class="nickname">nonoichi</h2>
+			<p class="tagline"></p>
+			<ul class="social">
+				<li>
+					<a href="https://github.com/nonoichi123"></a>
+						<i class="icon-github-circled"></i>
+					</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/nonoichi123">
+						<i class="icon-twitter-squared"></i>
+					</a>
+				</li>
+			</ul>
+			<p>&copy; 2020 All rights reserved</p>
+		</section>
+		<section class="content">
+			<div class="post-container">
+<a class="post-link" href="/facebook/graphapi/2019/07/28/wordpress-facebookapi.html">
+	<h1 class="post-title">facebook Graph API を使って、フィードを取得する</h1>
+</a>
+<div class="post-meta">
+	<ul class="post-categories"><li>Facebook</li><li>GraphApi</li></ul>
+	<div class="post-date"><i class="icon-calendar"></i>2019年07月28日</div>
+</div>
+<div class="post">
+	<p>facebook Graph API を使って、Facebookページのフィード情報を取得する流れを整理しました。</p>
+
+<h3 id="facebookの個人アカウントとfacebookページの違いについて">Facebookの個人アカウントとFacebookページの違いについて</h3>
+
+<p>facebook は、個人アカウントとFacebookページという２つの投稿方法があります。</p>
+
+<p>個人アカウントは、個人名で登録し、facebookにログインしている人しか見れないページです。<br />
+facebookを利用する上で、必ず登録するアカウントです。</p>
+
+<p>Facebookページは、昔はファンページと呼ばれていたようですが、<br />
+facebookにログインしていない方にも見てもらいたいときに使うアカウントです。<br />
+企業やサービス名の他、個人名でも登録することが可能なアカウントです。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>　</th>
+      <th>個人アカウント</th>
+      <th>Facebookページ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>登録方法</td>
+      <td>個人名で登録</td>
+      <td>企業名、サービス名、個人名で登録</td>
+    </tr>
+    <tr>
+      <td>閲覧者</td>
+      <td>Facebookにログインしている人のみ</td>
+      <td>誰でも閲覧可能</td>
+    </tr>
+    <tr>
+      <td>検索結果表示（Google, Yahooなど）</td>
+      <td>されない</td>
+      <td>される</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>2018年9月の個人情報流出事件を契機に、GraphAPIの利用が厳しくなりました。<br />
+現在、以下の項目以外を利用したい場合は、投稿レビュー申請が必須となりました。</p>
+
+<ul>
+  <li>email</li>
+  <li>public_profile（利用者の氏名、プロフィール写真、性別、年齢層などの基本情報）</li>
+  <li>user_friends（利用者の友達で、アプリを利用している人のリストへのアクセス）</li>
+</ul>
+
+<h3 id="facebook-for-developers-でアプリを作成する">facebook for developers でアプリを作成する</h3>
+
+<p>https://developers.facebook.com/apps/</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/001.png" alt="Add App" /></p>
+
+<p>新しいアプリIDを作成</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/002.png" alt="Add App" /></p>
+
+<p>本アプリの利用用途を設定</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/003.png" alt="Add App" /></p>
+
+<p>アプリIDとapp secret をメモしておく</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/004.png" alt="Add App" /></p>
+
+<p>プラットフォームを追加をクリックし、「ウェブサイト」を選択</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/005.png" alt="Add App" /></p>
+
+<p>ウェブサイトのサイトURLを設定</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/006.png" alt="Add App" /></p>
+
+<h3 id="アクセストークンを発行する">アクセストークンを発行する</h3>
+
+<p>https://developers.facebook.com/tools/accesstoken/</p>
+
+<p>「アクセス許可を与えてください」をクリック</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/007.png" alt="Regist Token" /></p>
+
+<p><img src="/assets/images/wordpress-facebookapi/008.png" alt="Regist Token" /></p>
+
+<p>User Token のデバッグボタンをクリック</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/009.png" alt="Regist Token" /></p>
+
+<p>これで、アクセストークンは発行されましたが、有効期限が2ヶ月以内となっています。<br />
+そのため、無期限のアクセストークンを発行します。</p>
+
+<h3 id="無期限のアクセストークンを発行する">無期限のアクセストークンを発行する</h3>
+
+<p>アプリ認証を行う</p>
+
+<p>パラメータは、設定 &gt; ベーシックで設定した内容を使う</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.facebook.com/dialog/oauth?client_id={アプリID}&amp;redirect_uri={サイトURL}  
+
+</code></pre></div></div>
+
+<p>URL例：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.facebook.com/dialog/oauth?client_id=41000000000000&amp;redirect_uri=http://localhost:8080/  
+
+</code></pre></div></div>
+
+<p>「OK」を押すと、</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/020.png" alt="Regist Token" /></p>
+
+<p>サイトURLが表示され、URLに認証コード（codeパラメータ）が付与されています</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/021.png" alt="Regist Token" /></p>
+
+<p>この認証コードを使って、アクセストークンを取得します。<br />
+それ以外のパラメータは、設定 &gt; ベーシックで設定した内容を引き続き使う</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://graph.facebook.com/oauth/access_token?client_id={アプリID}&amp;redirect_uri={サイトURL}&amp;client_secret={app secret}&amp;code={認証コード}  
+
+</code></pre></div></div>
+
+<p>access_token が発行されたことを確認</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/022.png" alt="Regist Token" /></p>
+
+<p>これを使って、無期限のアクセストークンを発行</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://graph.facebook.com/me/accounts?access_token={ユーザアクセストークン}  
+
+</code></pre></div></div>
+
+<p><img src="/assets/images/wordpress-facebookapi/023.png" alt="Regist Token" /></p>
+
+<p>アクセツストークンデバッガーページで、発行されたアクセストークンを確認する</p>
+
+<p>https://developers.facebook.com/tools/debug/accesstoken/</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/024.png" alt="Regist Token" /></p>
+
+<p>有効期限が「受け取らない」になっていることを確認できたら、OK</p>
+
+<h3 id="アクセス権限を設定する">アクセス権限を設定する</h3>
+
+<p>グラフAPIエクスプローラを開く</p>
+
+<p>https://developers.facebook.com/tools/explorer</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/010.png" alt="Graph Explorer" /></p>
+
+<p>送信ボタンを押すと、ログインユーザの情報が返ってくる</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/011.png" alt="Graph Explorer" /></p>
+
+<p>「ユーザアクセストークンを取得する」を選択</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/012.png" alt="Graph Explorer" /></p>
+
+<p>manage_pages をチェックする</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/013.png" alt="Graph Explorer" /></p>
+
+<p>「ログイン」をクリック</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/014.png" alt="Graph Explorer" /></p>
+
+<p>対象のfacebookページを選択して、「次へ」</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/015.png" alt="Graph Explorer" /></p>
+
+<p>apiで取得したいfacebookページを選択する</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/016.png" alt="Graph Explorer" /></p>
+
+<p>レビュー申請はひとまずあとで行うこととし、「完了」をクリック</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/017.png" alt="Graph Explorer" /></p>
+
+<p>「OK」を押すと、設定完了です。</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/018.png" alt="Graph Explorer" /></p>
+
+<h3 id="api接続確認を行う">api接続確認を行う</h3>
+
+<p>GET / v3.3 / の後のURLは以下を入力する</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[App ID]/feed?limit=30&amp;locale=ja&amp;fields=id,message,permalink_url,created_time,attachments
+</code></pre></div></div>
+
+<p>送信ボタンを押すと、フィード情報が返ってくる</p>
+
+<p><img src="/assets/images/wordpress-facebookapi/019.png" alt="Graph Explorer" /></p>
+
+</div><div id="disqus_thread" style="margin-top:120px"></div>
+  <script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+     /*
+     var disqus_config = function () {
+     this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+     this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+     };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://blog-danroo-com.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+		</section>
+	</main>
+
+	
+	<!-- Ptengine  -->
+	<script type="text/javascript">
+		window._pt_lt = new Date().getTime();
+		window._pt_sp_2 = [];
+		_pt_sp_2.push("setAccount,6d777cd9");
+		var _protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+		(function () {
+			var atag = document.createElement("script");
+			atag.type = "text/javascript";
+			atag.async = true;
+			atag.src = _protocol + "js.ptengine.jp/6d777cd9.js";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(atag, s);
+		})();
+	</script>
+	<!-- Ptengine  --><script id="dsq-count-scr" src="//blog-danroo-com.disqus.com/count.js" async></script>
+</body>
+
+</html>

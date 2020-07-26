@@ -1,0 +1,83 @@
+---
+layout: post
+comments: true
+title:  "npm 実行環境を構築する"
+date:   2019-07-13 00:00:00 +0000
+categories: Javascript NodeJS
+---
+npm 実行環境構築手順です。
+これで、npmコマンド、nodeコマンド、nodebrewコマンド、brewコマンドが実行できるようになります。
+
+Macのセットアップをするとき、いつも手順を忘れてしまうので、まとめました。
+
+[Homebrew][homebrew] とは、macOS用のパッケージマネージャーです。
+これがあれば、macOS上での開発環境が簡単に構築できます。
+
+[Node.js][nodejs] とは、Javascript実行環境です。
+npmが、Node.js用のパッケージマネージャーです。
+
+[nodebrew][nodebrew] とは、Node.jsのバージョン管理ツールです。
+案件によって、Node.jsのバージョンが違うので、これで管理するとお手軽です。
+
+
+[homebrew]: https://brew.sh/index_ja
+[nodejs]: https://nodejs.org/ja/
+[nodebrew]: https://github.com/hokaccha/nodebrew
+
+
+### 実行環境
+
+```
+macOS Mojave 10.14.5
+ruby ruby 2.3.7p456
+```
+
+### 実行環境構築手順
+
+- Homebrew インストール
+
+```javascript
+$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+```
+- nodebrew インストール
+
+```javascript
+$ brew install nodebrew
+```
+
+- node.js最新版のダウンロードが失敗するため、事前にフォルダを作成
+
+```javascript
+$ mkdir -p ~/.nodebrew/src
+```
+
+- node.js インストール
+
+```javascript
+$ nodebrew install-binary latest
+```
+
+- 初期設定（バージョン指定、パス設定など）
+
+```javascript
+$ nodebrew list
+$ nodebrew use v12.6.0
+$ echo 'export PATH=$PATH:$HOME/.nodebrew/current/bin' >> ~/.bashrc
+$ export PATH=$PATH:$HOME/.nodebrew/current/bin
+$ vi ~/.bash_profile
+
+if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+fi
+
+$ source ~/.bash_profile
+```
+
+- バージョン確認
+
+```javascript
+$ npm -v
+$ node -v
+```
+

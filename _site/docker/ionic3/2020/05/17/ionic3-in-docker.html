@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link href="https://fonts.googleapis.com/css?family=Merriweather:300|Raleway:400,700" rel="stylesheet">
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<title>Ionic3系の環境をDockerで構築する - ののいち no ログ</title>
+<!-- Begin Jekyll SEO tag v2.1.0 -->
+<title>Ionic3系の環境をDockerで構築する - ののいち no ログ</title>
+<meta property="og:title" content="Ionic3系の環境をDockerで構築する" />
+<meta name="description" content="Ionic3系の環境をDockerで構築したので、設定を残しておきます。" />
+<meta property="og:description" content="Ionic3系の環境をDockerで構築したので、設定を残しておきます。" />
+<link rel="canonical" href="/docker/ionic3/2020/05/17/ionic3-in-docker.html" />
+<meta property="og:url" content="/docker/ionic3/2020/05/17/ionic3-in-docker.html" />
+<meta property="og:site_name" content="ののいち no ログ" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-05-17T09:00:00+09:00" />
+<script type="application/ld+json">
+{"@context": "http://schema.org",
+"@type": "BlogPosting",
+"headline": "Ionic3系の環境をDockerで構築する",
+"datePublished": "2020-05-17T09:00:00+09:00",
+"description": "Ionic3系の環境をDockerで構築したので、設定を残しておきます。",
+"url": "/docker/ionic3/2020/05/17/ionic3-in-docker.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-173547685-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'UA-173547685-1');
+	</script>
+
+	<script data-ad-client="ca-pub-9638052216153241" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script></head>
+
+<body>
+	<main class="container">
+		<section class="about">
+			<a href="/"><img src="/assets/portfolio.png" alt="nonoichi"></a>
+			<h2 class="nickname">nonoichi</h2>
+			<p class="tagline"></p>
+			<ul class="social">
+				<li>
+					<a href="https://github.com/nonoichi123"></a>
+						<i class="icon-github-circled"></i>
+					</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/nonoichi123">
+						<i class="icon-twitter-squared"></i>
+					</a>
+				</li>
+			</ul>
+			<p>&copy; 2020 All rights reserved</p>
+		</section>
+		<section class="content">
+			<div class="post-container">
+<a class="post-link" href="/docker/ionic3/2020/05/17/ionic3-in-docker.html">
+	<h1 class="post-title">Ionic3系の環境をDockerで構築する</h1>
+</a>
+<div class="post-meta">
+	<ul class="post-categories"><li>Docker</li><li>Ionic3</li></ul>
+	<div class="post-date"><i class="icon-calendar"></i>2020年05月17日</div>
+</div>
+<div class="post">
+	<p>Ionic3系の環境をDockerで構築したので、設定を残しておきます。</p>
+
+<h2 id="実行環境">実行環境</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>macOS Catalina 10.15.4
+Docker Desktop 2.2.0.0
+ionic-cli 5.4.16
+ionic-angular 3.9.9
+</code></pre></div></div>
+
+<h2 id="docker-composeyml">docker-compose.yml</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="ss">version: </span><span class="s2">"3"</span>
+<span class="ss">services:
+  web:
+    build: </span><span class="p">.</span><span class="nf">/</span><span class="n">docker</span><span class="o">/</span><span class="n">ionic</span>
+    <span class="ss">privileged: </span><span class="kp">true</span>
+    <span class="ss">tty: </span><span class="kp">true</span>
+    <span class="ss">volumes:
+      </span><span class="o">-</span> <span class="p">.</span><span class="nf">/</span><span class="ss">:/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">html</span>
+    <span class="ss">ports:
+      </span><span class="o">-</span> <span class="mi">8100</span><span class="p">:</span><span class="mi">8100</span>
+    <span class="ss">container_name: </span><span class="n">dra</span>
+    <span class="ss">networks:
+      </span><span class="o">-</span> <span class="n">dra_app_net</span>
+<span class="ss">networks:
+  dra_app_net:
+</span></code></pre></div></div>
+
+<h2 id="dockerfile">Dockerfile</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">FROM</span> <span class="n">centos</span><span class="p">:</span><span class="mf">7.6</span><span class="o">.</span><span class="mi">1810</span>
+
+<span class="no">RUN</span> <span class="n">yum</span> <span class="o">-</span><span class="n">y</span> <span class="n">update</span>
+
+<span class="no">RUN</span> <span class="n">yum</span> <span class="o">-</span><span class="n">y</span> <span class="n">install</span> <span class="n">epel</span><span class="o">-</span><span class="n">release</span>
+<span class="no">RUN</span> <span class="n">yum</span> <span class="o">-</span><span class="n">y</span> <span class="n">install</span> <span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="n">rpms</span><span class="p">.</span><span class="nf">remirepo</span><span class="p">.</span><span class="nf">net</span><span class="o">/</span><span class="n">enterprise</span><span class="o">/</span><span class="n">remi</span><span class="o">-</span><span class="n">release</span><span class="o">-</span><span class="mi">7</span><span class="p">.</span><span class="nf">rpm</span>
+
+<span class="no">RUN</span> <span class="n">yum</span> <span class="o">-</span><span class="n">y</span> <span class="n">upgrade</span>
+
+<span class="no">RUN</span> <span class="n">yum</span> <span class="o">-</span><span class="n">y</span> <span class="n">install</span> <span class="n">https</span><span class="ss">:/</span><span class="o">/</span><span class="n">rpm</span><span class="p">.</span><span class="nf">nodesource</span><span class="p">.</span><span class="nf">com</span><span class="o">/</span><span class="n">pub_10</span><span class="p">.</span><span class="nf">x</span><span class="o">/</span><span class="n">el</span><span class="o">/</span><span class="mi">7</span><span class="o">/</span><span class="n">x86_64</span><span class="o">/</span><span class="n">nodesource</span><span class="o">-</span><span class="n">release</span><span class="o">-</span><span class="n">el7</span><span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="nf">noarch</span><span class="p">.</span><span class="nf">rpm</span>
+<span class="no">RUN</span> <span class="n">yum</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">gcc</span><span class="o">-</span><span class="n">c</span><span class="o">++</span> <span class="n">make</span>
+<span class="no">RUN</span> <span class="n">yum</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">nodejs</span>
+
+<span class="no">RUN</span> <span class="n">npm</span> <span class="n">install</span> <span class="o">-</span><span class="n">g</span> <span class="n">ionic</span>
+<span class="no">RUN</span> <span class="n">npm</span> <span class="n">install</span> <span class="o">-</span><span class="n">g</span> <span class="n">cordova</span>
+
+<span class="no">ENV</span> <span class="no">HOST</span> <span class="mf">0.0</span><span class="o">.</span><span class="mf">0.0</span>
+
+<span class="no">WORKDIR</span> <span class="sr">/var/</span><span class="n">www</span><span class="o">/</span><span class="n">html</span>
+</code></pre></div></div>
+
+<h2 id="dockerコンテナ起動">Dockerコンテナ起動</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">build</span>
+<span class="err">$</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">up</span> <span class="o">-</span><span class="n">d</span>
+<span class="err">$</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="nb">exec</span> <span class="n">web</span> <span class="n">bash</span>
+</code></pre></div></div>
+
+<h2 id="ionicプロダクト作成">Ionicプロダクト作成</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ionic start -type=ionic-angular</span>
+</code></pre></div></div>
+
+<h4 id="実行結果">実行結果</h4>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Every</span> <span class="n">great</span> <span class="n">app</span> <span class="n">needs</span> <span class="n">a</span> <span class="nb">name</span><span class="o">!</span> 
+
+<span class="no">Please</span> <span class="n">enter</span> <span class="n">the</span> <span class="n">full</span> <span class="nb">name</span> <span class="n">of</span> <span class="n">your</span> <span class="n">app</span><span class="o">.</span> <span class="no">You</span> <span class="n">can</span> <span class="n">change</span> <span class="n">this</span> <span class="n">at</span> <span class="n">any</span> <span class="n">time</span><span class="o">.</span> <span class="no">To</span> <span class="n">bypass</span> <span class="n">this</span> <span class="n">prompt</span> <span class="k">next</span> <span class="n">time</span><span class="p">,</span> <span class="n">supply</span> <span class="nb">name</span><span class="p">,</span>
+<span class="n">the</span> <span class="n">first</span> <span class="n">argument</span> <span class="n">to</span> <span class="n">ionic</span> <span class="n">start</span><span class="o">.</span>
+
+<span class="p">?</span> <span class="no">Project</span> <span class="ss">name: </span><span class="n">app</span>
+
+<span class="no">Let</span><span class="err">'</span><span class="n">s</span> <span class="n">pick</span> <span class="n">the</span> <span class="n">perfect</span> <span class="n">starter</span> <span class="n">template!</span> 
+
+<span class="no">Starter</span> <span class="n">templates</span> <span class="n">are</span> <span class="n">ready</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">go</span> <span class="no">Ionic</span> <span class="n">apps</span> <span class="n">that</span> <span class="n">come</span> <span class="n">packed</span> <span class="n">with</span> <span class="n">everything</span> <span class="n">you</span> <span class="n">need</span> <span class="n">to</span> <span class="n">build</span> <span class="n">your</span> <span class="n">app</span><span class="o">.</span> <span class="no">To</span> <span class="n">bypass</span> <span class="n">this</span>
+<span class="n">prompt</span> <span class="k">next</span> <span class="n">time</span><span class="p">,</span> <span class="n">supply</span> <span class="n">template</span><span class="p">,</span> <span class="n">the</span> <span class="n">second</span> <span class="n">argument</span> <span class="n">to</span> <span class="n">ionic</span> <span class="n">start</span><span class="o">.</span>
+
+<span class="p">?</span> <span class="no">Starter</span> <span class="ss">template: </span><span class="n">tabs</span>
+<span class="err">✔</span> <span class="no">Preparing</span> <span class="n">directory</span> <span class="p">.</span><span class="nf">/</span><span class="n">app</span> <span class="o">-</span> <span class="n">done!</span>
+<span class="err">✔</span> <span class="no">Downloading</span> <span class="n">and</span> <span class="n">extracting</span> <span class="n">tabs</span> <span class="n">starter</span> <span class="o">-</span> <span class="n">done!</span>
+
+<span class="no">Installing</span> <span class="n">dependencies</span> <span class="n">may</span> <span class="n">take</span> <span class="n">several</span> <span class="n">minutes</span><span class="o">.</span>
+</code></pre></div></div>
+
+<h2 id="ionic-バージョン確認">Ionic バージョン確認</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ionic info</span>
+</code></pre></div></div>
+
+<h4 id="実行結果-1">実行結果</h4>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Ionic</span><span class="p">:</span>
+
+   <span class="no">Ionic</span> <span class="no">CLI</span>          <span class="p">:</span> <span class="mf">5.4</span><span class="o">.</span><span class="mi">16</span> <span class="p">(</span><span class="sr">/usr/</span><span class="n">lib</span><span class="o">/</span><span class="n">node_modules</span><span class="o">/</span><span class="n">ionic</span><span class="p">)</span>
+   <span class="no">Ionic</span> <span class="no">Framework</span>    <span class="p">:</span> <span class="n">ionic</span><span class="o">-</span><span class="n">angular</span> <span class="mf">3.9</span><span class="o">.</span><span class="mi">9</span>
+   <span class="vi">@ionic</span><span class="o">/</span><span class="n">app</span><span class="o">-</span><span class="n">scripts</span> <span class="p">:</span> <span class="mf">3.2</span><span class="o">.</span><span class="mi">4</span>
+
+<span class="no">Utility</span><span class="p">:</span>
+
+   <span class="n">cordova</span><span class="o">-</span><span class="n">res</span> <span class="p">:</span> <span class="n">not</span> <span class="n">installed</span>
+   <span class="n">native</span><span class="o">-</span><span class="n">run</span>  <span class="p">:</span> <span class="n">not</span> <span class="n">installed</span>
+
+<span class="no">System</span><span class="p">:</span>
+
+   <span class="no">NodeJS</span> <span class="p">:</span> <span class="n">v10</span><span class="o">.</span><span class="mf">20.1</span> <span class="p">(</span><span class="sr">/usr/</span><span class="n">bin</span><span class="o">/</span><span class="n">node</span><span class="p">)</span>
+   <span class="n">npm</span>    <span class="p">:</span> <span class="mf">6.14</span><span class="o">.</span><span class="mi">4</span>
+   <span class="no">OS</span>     <span class="p">:</span> <span class="no">Linux</span> <span class="mf">4.19</span>
+
+
+  <span class="err">────────────────────────────────────────────────────────────</span>
+
+           <span class="no">Ionic</span> <span class="no">CLI</span> <span class="n">update</span> <span class="ss">available: </span><span class="mf">5.4</span><span class="o">.</span><span class="mi">16</span> <span class="err">→</span> <span class="mf">6.9</span><span class="o">.</span><span class="mi">1</span>
+
+     <span class="no">The</span> <span class="n">package</span> <span class="nb">name</span> <span class="n">has</span> <span class="n">changed</span> <span class="n">from</span> <span class="n">ionic</span> <span class="n">to</span> <span class="vi">@ionic</span><span class="o">/</span><span class="n">cli!</span>
+
+             <span class="no">To</span> <span class="n">update</span><span class="p">,</span> <span class="ss">run: </span><span class="n">npm</span> <span class="n">uninstall</span> <span class="o">-</span><span class="n">g</span> <span class="n">ionic</span>
+                 <span class="no">Then</span> <span class="ss">run: </span><span class="n">npm</span> <span class="n">i</span> <span class="o">-</span><span class="n">g</span> <span class="vi">@ionic</span><span class="o">/</span><span class="n">cli</span>
+
+  <span class="err">────────────────────────────────────────────────────────────</span>
+</code></pre></div></div>
+
+<h2 id="ionic起動">Ionic起動</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ionic serve -port 8100 -address=0.0.0.0</span>
+</code></pre></div></div>
+
+<h2 id="起動確認">起動確認</h2>
+
+<p>http://localhost:8100 でIonicの画面が表示されることを確認する</p>
+
+</div><div id="disqus_thread" style="margin-top:120px"></div>
+  <script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+     /*
+     var disqus_config = function () {
+     this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+     this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+     };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://blog-danroo-com.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+		</section>
+	</main>
+
+	
+	<!-- Ptengine  -->
+	<script type="text/javascript">
+		window._pt_lt = new Date().getTime();
+		window._pt_sp_2 = [];
+		_pt_sp_2.push("setAccount,6d777cd9");
+		var _protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+		(function () {
+			var atag = document.createElement("script");
+			atag.type = "text/javascript";
+			atag.async = true;
+			atag.src = _protocol + "js.ptengine.jp/6d777cd9.js";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(atag, s);
+		})();
+	</script>
+	<!-- Ptengine  --><script id="dsq-count-scr" src="//blog-danroo-com.disqus.com/count.js" async></script>
+</body>
+
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link href="https://fonts.googleapis.com/css?family=Merriweather:300|Raleway:400,700" rel="stylesheet">
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<title>wp_head関数で出力される要素を非表示にする - ののいち no ログ</title>
+<!-- Begin Jekyll SEO tag v2.1.0 -->
+<title>wp_head関数で出力される要素を非表示にする - ののいち no ログ</title>
+<meta property="og:title" content="wp_head関数で出力される要素を非表示にする" />
+<meta name="description" content="Wordpressでは、headタグにmetaタグやlinkタグが自動で設定されるようになっています。 便利な面もありますが、非表示にしたいというケースもあり、非表示にする方法をまとめました。" />
+<meta property="og:description" content="Wordpressでは、headタグにmetaタグやlinkタグが自動で設定されるようになっています。 便利な面もありますが、非表示にしたいというケースもあり、非表示にする方法をまとめました。" />
+<link rel="canonical" href="/wordpress/2020/07/25/wp-head.html" />
+<meta property="og:url" content="/wordpress/2020/07/25/wp-head.html" />
+<meta property="og:site_name" content="ののいち no ログ" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-25T09:00:00+09:00" />
+<script type="application/ld+json">
+{"@context": "http://schema.org",
+"@type": "BlogPosting",
+"headline": "wp_head関数で出力される要素を非表示にする",
+"datePublished": "2020-07-25T09:00:00+09:00",
+"description": "Wordpressでは、headタグにmetaタグやlinkタグが自動で設定されるようになっています。 便利な面もありますが、非表示にしたいというケースもあり、非表示にする方法をまとめました。",
+"url": "/wordpress/2020/07/25/wp-head.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-173547685-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'UA-173547685-1');
+	</script>
+
+	<script data-ad-client="ca-pub-9638052216153241" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script></head>
+
+<body>
+	<main class="container">
+		<section class="about">
+			<a href="/"><img src="/assets/portfolio.png" alt="nonoichi"></a>
+			<h2 class="nickname">nonoichi</h2>
+			<p class="tagline"></p>
+			<ul class="social">
+				<li>
+					<a href="https://github.com/nonoichi123"></a>
+						<i class="icon-github-circled"></i>
+					</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/nonoichi123">
+						<i class="icon-twitter-squared"></i>
+					</a>
+				</li>
+			</ul>
+			<p>&copy; 2020 All rights reserved</p>
+		</section>
+		<section class="content">
+			<div class="post-container">
+<a class="post-link" href="/wordpress/2020/07/25/wp-head.html">
+	<h1 class="post-title">wp_head関数で出力される要素を非表示にする</h1>
+</a>
+<div class="post-meta">
+	<ul class="post-categories"><li>wordpress</li></ul>
+	<div class="post-date"><i class="icon-calendar"></i>2020年07月25日</div>
+</div>
+<div class="post">
+	<p>Wordpressでは、headタグにmetaタグやlinkタグが自動で設定されるようになっています。
+便利な面もありますが、非表示にしたいというケースもあり、非表示にする方法をまとめました。</p>
+
+<h4 id="目次">目次</h4>
+<ul>
+  <li><a href="#実行環境">実行環境</a></li>
+  <li><a href="#反映方法">反映方法</a></li>
+  <li><a href="#dns-prefetch">dns-prefetch</a>
+    <ul>
+      <li><a href="#非表示にする方法">非表示にする方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#wp-block-library-css">wp-block-library-css</a>
+    <ul>
+      <li><a href="#非表示にする方法-1">非表示にする方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#wordpressバージョン情報">WordPressバージョン情報</a>
+    <ul>
+      <li><a href="#非表示にする方法-2">非表示にする方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#embed機能">Embed機能</a>
+    <ul>
+      <li><a href="#非表示にする方法-3">非表示にする方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#alternate---applicationjsonoembed--textxmloembed">alternate - application/json+oembed / text/xml+oembed</a>
+    <ul>
+      <li><a href="#非表示にする方法-4">非表示にする方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#httpレスポンスヘッダー">HTTPレスポンスヘッダー</a>
+    <ul>
+      <li><a href="#非表示にする方法-5">非表示にする方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#フィード情報">フィード情報</a>
+    <ul>
+      <li><a href="#非表示にする方法-6">非表示にする方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#shortlink">shortlink</a>
+    <ul>
+      <li><a href="#非表示にする方法-7">非表示にする方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#script---window_wpemojisettings">script - window._wpemojiSettings</a>
+    <ul>
+      <li><a href="#非表示にする方法-8">非表示にする方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#stylesheet---imgemoji">stylesheet - img.emoji</a>
+    <ul>
+      <li><a href="#非表示にする方法-9">非表示にする方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#edituri">EditURI</a>
+    <ul>
+      <li><a href="#非表示にする方法-10">非表示にする方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#wlwmanifest">wlwmanifest</a>
+    <ul>
+      <li><a href="#非表示にする方法-11">非表示にする方法</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="実行環境">実行環境</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>WordPress 5.4.2
+</code></pre></div></div>
+
+<h2 id="反映方法">反映方法</h2>
+
+<p>wp-content/themes/twentytwenty/functions.php の「after_setup_theme」アクションに追記修正を行います。</p>
+
+<h2 id="dns-prefetch">dns-prefetch</h2>
+
+<p>dns-prefetchは、httpsで非対応なので、不要。
+詳細は、<a href="/technology/2020/07/25/about-dnsprefetch.html">こちら</a>をどうぞ。</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">'dns-prefetch'</span> <span class="na">href=</span><span class="s">'//localhost'</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">'dns-prefetch'</span> <span class="na">href=</span><span class="s">'//s.w.org'</span> <span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<h4 id="非表示にする方法">非表示にする方法</h4>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">add_filter</span><span class="p">(</span><span class="s1">'wp_resource_hints'</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$hints</span><span class="p">,</span> <span class="nv">$relation_type</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="s1">'dns-prefetch'</span> <span class="o">===</span> <span class="nv">$relation_type</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">array_diff</span><span class="p">(</span><span class="nx">wp_dependencies_unique_hosts</span><span class="p">(),</span> <span class="nv">$hints</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nv">$hints</span><span class="p">;</span>
+<span class="p">},</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="wp-block-library-css">wp-block-library-css</h2>
+
+<p>Gutenberg用のCSSファイル を読み込む設定。
+Gutenbergを使わず、クラシックエディタを使っているため、非表示にする。</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">'stylesheet'</span> <span class="na">id=</span><span class="s">'wp-block-library-css'</span> <span class="na">href=</span><span class="s">'http://localhost/wp-includes/css/dist/block-library/style.min.css?ver=5.4.2'</span> <span class="na">type=</span><span class="s">'text/css'</span> <span class="na">media=</span><span class="s">'all'</span> <span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<h4 id="非表示にする方法-1">非表示にする方法</h4>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">add_filter</span><span class="p">(</span><span class="s1">'wp_enqueue_scripts'</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">wp_dequeue_style</span><span class="p">(</span><span class="s1">'wp-block-library'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h2 id="wordpressバージョン情報">WordPressバージョン情報</h2>
+
+<p>WordPressのバージョンを示すタグ。セキュリティの観点からも非表示にしたい。</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"generator"</span> <span class="na">content=</span><span class="s">"WordPress 5.4.2"</span> <span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<h4 id="非表示にする方法-2">非表示にする方法</h4>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">remove_action</span><span class="p">(</span><span class="s1">'wp_head'</span><span class="p">,</span> <span class="s1">'wp_generator'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="embed機能">Embed機能</h2>
+
+<p>外部サイトの記事を引用した際、記事のURLを貼るだけで、
+タイトル、アイキャッチ画像、抜粋テキスト、サイトロゴ、サイトタイトルなどを取得し、表示する機能で利用。</p>
+
+<p>Embed機能を利用しないなら、不要。</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">'https://api.w.org/'</span> <span class="na">href=</span><span class="s">'http://localhost/wp-json/'</span> <span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<h4 id="非表示にする方法-3">非表示にする方法</h4>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">remove_action</span><span class="p">(</span><span class="s1">'wp_head'</span><span class="p">,</span> <span class="s1">'rest_output_link_wp_head'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="alternate---applicationjsonoembed--textxmloembed">alternate - application/json+oembed / text/xml+oembed</h2>
+
+<p>Embed機能 と同様。</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"alternate"</span> <span class="na">type=</span><span class="s">"application/json+oembed"</span> <span class="na">href=</span><span class="s">"http://localhost/wp-json/oembed/1.0/embed?url=http%3A%2F%2Flocalhost%2F2020%2F07%2Fhello-world%2F"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"alternate"</span> <span class="na">type=</span><span class="s">"text/xml+oembed"</span> <span class="na">href=</span><span class="s">"http://localhost/wp-json/oembed/1.0/embed?url=http%3A%2F%2Flocalhost%2F2020%2F07%2Fhello-world%2F&amp;#038;format=xml"</span> <span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<h4 id="非表示にする方法-4">非表示にする方法</h4>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">remove_action</span><span class="p">(</span><span class="s1">'wp_head'</span><span class="p">,</span> <span class="s1">'wp_oembed_add_discovery_links'</span><span class="p">);</span>
+<span class="nx">remove_action</span><span class="p">(</span><span class="s1">'wp_head'</span><span class="p">,</span><span class="s1">'wp_oembed_add_host_js'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="httpレスポンスヘッダー">HTTPレスポンスヘッダー</h2>
+
+<p>HTTPレスポンスヘッダーにwp-jsonの出力がされているので、
+Embed機能を利用しないなら、こちらも不要。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Link</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="n">localhost</span><span class="o">/</span><span class="n">wp</span><span class="o">-</span><span class="n">json</span><span class="o">/&gt;</span><span class="p">;</span> <span class="n">rel</span><span class="o">=</span><span class="s2">"https://api.w.org/"</span>
+</code></pre></div></div>
+
+<h4 id="非表示にする方法-5">非表示にする方法</h4>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">remove_action</span><span class="p">(</span><span class="s1">'template_redirect'</span><span class="p">,</span> <span class="s1">'rest_output_link_header'</span><span class="p">,</span> <span class="mi">11</span> <span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="フィード情報">フィード情報</h2>
+
+<p>RSSフィードのURL。<br />
+RSSフィードを利用しないなら、不要。</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"alternate"</span> <span class="na">type=</span><span class="s">"application/rss+xml"</span> <span class="na">title=</span><span class="s">"example.com &amp;raquo; フィード"</span> <span class="na">href=</span><span class="s">"http://localhost/feed/"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"alternate"</span> <span class="na">type=</span><span class="s">"application/rss+xml"</span> <span class="na">title=</span><span class="s">"example.com &amp;raquo; コメントフィード"</span> <span class="na">href=</span><span class="s">"http://localhost/comments/feed/"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"alternate"</span> <span class="na">type=</span><span class="s">"application/rss+xml"</span> <span class="na">title=</span><span class="s">"example.com &amp;raquo; Hello world! のコメントのフィード"</span> <span class="na">href=</span><span class="s">"http://localhost/2020/07/hello-world/feed/"</span> <span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<h4 id="非表示にする方法-6">非表示にする方法</h4>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// add_theme_support('automatic-feed-links'); ← 記載されていたら、コメントアウトする</span>
+<span class="nx">remove_action</span><span class="p">(</span><span class="s1">'wp_head'</span><span class="p">,</span> <span class="s1">'feed_links_extra'</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="shortlink">shortlink</h2>
+
+<p>shortlinkとは、現在の記事の短縮された URL リンク。デフォルトでは /?p=1234 のような形式。</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">'shortlink'</span> <span class="na">href=</span><span class="s">'http://localhost/?p=1'</span> <span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<h4 id="非表示にする方法-7">非表示にする方法</h4>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">remove_action</span><span class="p">(</span><span class="s1">'wp_head'</span><span class="p">,</span> <span class="s1">'wp_shortlink_wp_head'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="script---window_wpemojisettings">script - window._wpemojiSettings</h2>
+
+<p>絵文字を変換するためのタグ。<br />
+絵文字を利用しないであったり、画像として利用しているなら、不要。</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+      <span class="nb">window</span><span class="p">.</span><span class="nx">_wpemojiSettings</span> <span class="o">=</span> <span class="p">{</span><span class="dl">"</span><span class="s2">baseUrl</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">https:</span><span class="se">\</span><span class="s2">/</span><span class="se">\</span><span class="s2">/s.w.org</span><span class="se">\</span><span class="s2">/images</span><span class="se">\</span><span class="s2">/core</span><span class="se">\</span><span class="s2">/emoji</span><span class="se">\</span><span class="s2">/12.0.0-1</span><span class="se">\</span><span class="s2">/72x72</span><span class="se">\</span><span class="s2">/</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">ext</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">.png</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">svgUrl</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">https:</span><span class="se">\</span><span class="s2">/</span><span class="se">\</span><span class="s2">/s.w.org</span><span class="se">\</span><span class="s2">/images</span><span class="se">\</span><span class="s2">/core</span><span class="se">\</span><span class="s2">/emoji</span><span class="se">\</span><span class="s2">/12.0.0-1</span><span class="se">\</span><span class="s2">/svg</span><span class="se">\</span><span class="s2">/</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">svgExt</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">.svg</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">source</span><span class="dl">"</span><span class="p">:{</span><span class="dl">"</span><span class="s2">concatemoji</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">http:</span><span class="se">\</span><span class="s2">/</span><span class="se">\</span><span class="s2">/localhost</span><span class="se">\</span><span class="s2">/wp-includes</span><span class="se">\</span><span class="s2">/js</span><span class="se">\</span><span class="s2">/wp-emoji-release.min.js?ver=5.4.2</span><span class="dl">"</span><span class="p">}};</span>
+
+<span class="p">[</span><span class="nx">以下省略</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h4 id="非表示にする方法-8">非表示にする方法</h4>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">remove_action</span><span class="p">(</span><span class="s1">'wp_head'</span><span class="p">,</span> <span class="s1">'print_emoji_detection_script'</span><span class="p">,</span> <span class="mi">7</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="stylesheet---imgemoji">stylesheet - img.emoji</h2>
+
+<p>script - window._wpemojiSettings と同様。</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;style </span><span class="na">type=</span><span class="s">"text/css"</span><span class="nt">&gt;</span>
+<span class="nt">img</span><span class="nc">.wp-smiley</span><span class="o">,</span>
+<span class="nt">img</span><span class="nc">.emoji</span> <span class="p">{</span>
+
+<span class="err">[以下省略]</span>
+</code></pre></div></div>
+
+<h4 id="非表示にする方法-9">非表示にする方法</h4>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">remove_action</span><span class="p">(</span><span class="s1">'wp_print_styles'</span><span class="p">,</span> <span class="s1">'print_emoji_styles'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="edituri">EditURI</h2>
+
+<p>外部の投稿ツールからWordPressに登録する際に利用されるタグ。<br />
+外部から投稿しないなら不要。</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"EditURI"</span> <span class="na">type=</span><span class="s">"application/rsd+xml"</span> <span class="na">title=</span><span class="s">"RSD"</span> <span class="na">href=</span><span class="s">"http://localhost/xmlrpc.php?rsd"</span> <span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<h4 id="非表示にする方法-10">非表示にする方法</h4>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">remove_action</span><span class="p">(</span><span class="s1">'wp_head'</span><span class="p">,</span> <span class="s1">'rsd_link'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="wlwmanifest">wlwmanifest</h2>
+
+<p>Microsoft社が提供する「Windows Live Writer」からWordPressにブログ投稿する際に利用されるタグ。<br />
+「Windows Live Writer」を利用しないなら不要。</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"wlwmanifest"</span> <span class="na">type=</span><span class="s">"application/wlwmanifest+xml"</span> <span class="na">href=</span><span class="s">"http://localhost/wp-includes/wlwmanifest.xml"</span> <span class="nt">/&gt;</span> 
+</code></pre></div></div>
+
+<h4 id="非表示にする方法-11">非表示にする方法</h4>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">remove_action</span><span class="p">(</span><span class="s1">'wp_head'</span><span class="p">,</span> <span class="s1">'wlwmanifest_link'</span><span class="p">);</span>
+</code></pre></div></div>
+
+</div><div id="disqus_thread" style="margin-top:120px"></div>
+  <script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+     /*
+     var disqus_config = function () {
+     this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+     this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+     };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://blog-danroo-com.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+		</section>
+	</main>
+
+	
+	<!-- Ptengine  -->
+	<script type="text/javascript">
+		window._pt_lt = new Date().getTime();
+		window._pt_sp_2 = [];
+		_pt_sp_2.push("setAccount,6d777cd9");
+		var _protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+		(function () {
+			var atag = document.createElement("script");
+			atag.type = "text/javascript";
+			atag.async = true;
+			atag.src = _protocol + "js.ptengine.jp/6d777cd9.js";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(atag, s);
+		})();
+	</script>
+	<!-- Ptengine  --><script id="dsq-count-scr" src="//blog-danroo-com.disqus.com/count.js" async></script>
+</body>
+
+</html>

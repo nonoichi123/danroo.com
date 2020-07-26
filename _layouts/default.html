@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+	{%- include head.html -%}
+
+	{% if jekyll.environment == "production" %}
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-173547685-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'UA-173547685-1');
+	</script>
+
+	<script data-ad-client="ca-pub-9638052216153241" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	{%- endif -%}
+</head>
+
+<body>
+	<main class="container">
+		<section class="about">
+			<a href="/"><img src="{{ "/assets/portfolio.png" | relative_url }}" alt="{{ site.plainwhite.name }}"></a>
+			<h2 class="nickname">{{ site.plainwhite.name }}</h2>
+			<p class="tagline">{{ site.plainwhite.tagline }}</p>
+			<ul class="social">
+				<li>
+					<a href="https://github.com/{{ site.plainwhite.social_links.github }}"></a>
+						<i class="icon-github-circled"></i>
+					</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/{{ site.plainwhite.social_links.twitter }}">
+						<i class="icon-twitter-squared"></i>
+					</a>
+				</li>
+			</ul>
+			<p>&copy; 2020 All rights reserved</p>
+		</section>
+		<section class="content">
+			{{ content }}
+		</section>
+	</main>
+
+	{% if jekyll.environment == "production" %}
+	<!-- Ptengine  -->
+	<script type="text/javascript">
+		window._pt_lt = new Date().getTime();
+		window._pt_sp_2 = [];
+		_pt_sp_2.push("setAccount,6d777cd9");
+		var _protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+		(function () {
+			var atag = document.createElement("script");
+			atag.type = "text/javascript";
+			atag.async = true;
+			atag.src = _protocol + "js.ptengine.jp/6d777cd9.js";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(atag, s);
+		})();
+	</script>
+	<!-- Ptengine  -->
+	{%- endif -%}
+
+	<script id="dsq-count-scr" src="//blog-danroo-com.disqus.com/count.js" async></script>
+</body>
+
+</html>

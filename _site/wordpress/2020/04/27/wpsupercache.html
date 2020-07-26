@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link href="https://fonts.googleapis.com/css?family=Merriweather:300|Raleway:400,700" rel="stylesheet">
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<title>WPSuperCache でトップページだけキャッシュされない - ののいち no ログ</title>
+<!-- Begin Jekyll SEO tag v2.1.0 -->
+<title>WPSuperCache でトップページだけキャッシュされない - ののいち no ログ</title>
+<meta property="og:title" content="WPSuperCache でトップページだけキャッシュされない" />
+<meta name="description" content="WPSuperCache でキャッシュを有効化したところ、トップページだけキャッシュされない事象が発生しました。 別のプラグインの設定が悪さをしていました。原因と解消方法を載せておきます。" />
+<meta property="og:description" content="WPSuperCache でキャッシュを有効化したところ、トップページだけキャッシュされない事象が発生しました。 別のプラグインの設定が悪さをしていました。原因と解消方法を載せておきます。" />
+<link rel="canonical" href="/wordpress/2020/04/27/wpsupercache.html" />
+<meta property="og:url" content="/wordpress/2020/04/27/wpsupercache.html" />
+<meta property="og:site_name" content="ののいち no ログ" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-27T09:00:00+09:00" />
+<script type="application/ld+json">
+{"@context": "http://schema.org",
+"@type": "BlogPosting",
+"headline": "WPSuperCache でトップページだけキャッシュされない",
+"datePublished": "2020-04-27T09:00:00+09:00",
+"description": "WPSuperCache でキャッシュを有効化したところ、トップページだけキャッシュされない事象が発生しました。 別のプラグインの設定が悪さをしていました。原因と解消方法を載せておきます。",
+"url": "/wordpress/2020/04/27/wpsupercache.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-173547685-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'UA-173547685-1');
+	</script>
+
+	<script data-ad-client="ca-pub-9638052216153241" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script></head>
+
+<body>
+	<main class="container">
+		<section class="about">
+			<a href="/"><img src="/assets/portfolio.png" alt="nonoichi"></a>
+			<h2 class="nickname">nonoichi</h2>
+			<p class="tagline"></p>
+			<ul class="social">
+				<li>
+					<a href="https://github.com/nonoichi123"></a>
+						<i class="icon-github-circled"></i>
+					</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/nonoichi123">
+						<i class="icon-twitter-squared"></i>
+					</a>
+				</li>
+			</ul>
+			<p>&copy; 2020 All rights reserved</p>
+		</section>
+		<section class="content">
+			<div class="post-container">
+<a class="post-link" href="/wordpress/2020/04/27/wpsupercache.html">
+	<h1 class="post-title">WPSuperCache でトップページだけキャッシュされない</h1>
+</a>
+<div class="post-meta">
+	<ul class="post-categories"><li>wordpress</li></ul>
+	<div class="post-date"><i class="icon-calendar"></i>2020年04月27日</div>
+</div>
+<div class="post">
+	<p>WPSuperCache でキャッシュを有効化したところ、トップページだけキャッシュされない事象が発生しました。
+別のプラグインの設定が悪さをしていました。原因と解消方法を載せておきます。</p>
+
+<h2 id="原因">原因</h2>
+
+<p>原因は、多言語化対応用プラグイン「PolyLangs」が悪さをしていました。</p>
+
+<h2 id="解消方法">解消方法</h2>
+
+<p>「PolyLangs」の設定にある、「ブラウザーの言語の検出」を無効化することで解消しました。</p>
+
+<p><img src="/assets/images/2020-04-27-wpsupercache/bd58d76e462f26d90a9154fdf671fbbf.png" alt="PolyLangs設定" /></p>
+
+<p>[参考] <a href="https://wordpress.org/support/topic/preload-not-working-on-homepage/">https://wordpress.org/support/topic/preload-not-working-on-homepage/</a></p>
+
+<h2 id="wp-super-cache-とは">WP Super Cache とは</h2>
+
+<p>初回アクセス時に静的なHTMLを生成し、2回目以降は、静的なHTMLを表示することで、ページ表示速度を改善するするプラグインです。
+日本語化もある程度されており、簡単に使えるプラグインです。</p>
+
+<p>▼プラグイン紹介ページ<br />
+<a href="https://ja.wordpress.org/plugins/wp-super-cache/">https://ja.wordpress.org/plugins/wp-super-cache/</a></p>
+
+</div><div id="disqus_thread" style="margin-top:120px"></div>
+  <script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+     /*
+     var disqus_config = function () {
+     this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+     this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+     };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://blog-danroo-com.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+		</section>
+	</main>
+
+	
+	<!-- Ptengine  -->
+	<script type="text/javascript">
+		window._pt_lt = new Date().getTime();
+		window._pt_sp_2 = [];
+		_pt_sp_2.push("setAccount,6d777cd9");
+		var _protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+		(function () {
+			var atag = document.createElement("script");
+			atag.type = "text/javascript";
+			atag.async = true;
+			atag.src = _protocol + "js.ptengine.jp/6d777cd9.js";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(atag, s);
+		})();
+	</script>
+	<!-- Ptengine  --><script id="dsq-count-scr" src="//blog-danroo-com.disqus.com/count.js" async></script>
+</body>
+
+</html>

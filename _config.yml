@@ -1,0 +1,30 @@
+title: ののいち no ログ
+author: nonoichi
+email: nonoichi123@gmail.com
+description: >
+  手渡しのような温もりを感じてもらえるように、そんな思いを込めて作ったシステムに関わる備忘録を残しています。
+show_excerpts: true
+paginate: 50
+paginate_path: "/page:num/"
+
+sass:
+  sass_dir: _sass
+plainwhite:
+  name: "nonoichi"
+  tagline: 
+  date_format: "%b %-d, %Y"
+  sitemap: true
+
+  disqus_shortname: danroo
+
+  social_links:
+    twitter: nonoichi123
+    github:  nonoichi123
+    instagram: nonomurashoichi
+    rss: rss
+
+theme: plainwhite
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-paginate

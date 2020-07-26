@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link href="https://fonts.googleapis.com/css?family=Merriweather:300|Raleway:400,700" rel="stylesheet">
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<title>Jekyll でサイトを作る - ののいち no ログ</title>
+<!-- Begin Jekyll SEO tag v2.1.0 -->
+<title>Jekyll でサイトを作る - ののいち no ログ</title>
+<meta property="og:title" content="Jekyll でサイトを作る" />
+<meta name="description" content="Jekyll はプレーンテキストで静的サイトやブログが作成できるサービスです。 GitHub pagesやFirebase Hosting、Heroku、レンタルサーバなどの 様々な環境で簡単に公開できるようになっています。" />
+<meta property="og:description" content="Jekyll はプレーンテキストで静的サイトやブログが作成できるサービスです。 GitHub pagesやFirebase Hosting、Heroku、レンタルサーバなどの 様々な環境で簡単に公開できるようになっています。" />
+<link rel="canonical" href="/jekyll/2019/07/17/setup-jekyll.html" />
+<meta property="og:url" content="/jekyll/2019/07/17/setup-jekyll.html" />
+<meta property="og:site_name" content="ののいち no ログ" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-07-17T09:00:00+09:00" />
+<script type="application/ld+json">
+{"@context": "http://schema.org",
+"@type": "BlogPosting",
+"headline": "Jekyll でサイトを作る",
+"datePublished": "2019-07-17T09:00:00+09:00",
+"description": "Jekyll はプレーンテキストで静的サイトやブログが作成できるサービスです。 GitHub pagesやFirebase Hosting、Heroku、レンタルサーバなどの 様々な環境で簡単に公開できるようになっています。",
+"url": "/jekyll/2019/07/17/setup-jekyll.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-173547685-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'UA-173547685-1');
+	</script>
+
+	<script data-ad-client="ca-pub-9638052216153241" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script></head>
+
+<body>
+	<main class="container">
+		<section class="about">
+			<a href="/"><img src="/assets/portfolio.png" alt="nonoichi"></a>
+			<h2 class="nickname">nonoichi</h2>
+			<p class="tagline"></p>
+			<ul class="social">
+				<li>
+					<a href="https://github.com/nonoichi123"></a>
+						<i class="icon-github-circled"></i>
+					</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/nonoichi123">
+						<i class="icon-twitter-squared"></i>
+					</a>
+				</li>
+			</ul>
+			<p>&copy; 2020 All rights reserved</p>
+		</section>
+		<section class="content">
+			<div class="post-container">
+<a class="post-link" href="/jekyll/2019/07/17/setup-jekyll.html">
+	<h1 class="post-title">Jekyll でサイトを作る</h1>
+</a>
+<div class="post-meta">
+	<ul class="post-categories"><li>Jekyll</li></ul>
+	<div class="post-date"><i class="icon-calendar"></i>2019年07月17日</div>
+</div>
+<div class="post">
+	<p>Jekyll はプレーンテキストで静的サイトやブログが作成できるサービスです。<br />
+GitHub pagesやFirebase Hosting、Heroku、レンタルサーバなどの<br />
+様々な環境で簡単に公開できるようになっています。</p>
+
+<p>また、<a href="http://jekyllthemes.org/" target="_blank">Jekyll Theme</a> で様々なテンプレートが選べます。</p>
+
+<h3 id="実行環境">実行環境</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MacOS 10.14.3
+ruby ruby 2.3.7p456 (2018-03-28 revision 63024) [universal.x86_64-darwin18]
+gem 2.5.2.3
+</code></pre></div></div>
+
+<h3 id="jekyll-インストール">Jekyll インストール</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo gem install bundler jekyll
+</code></pre></div></div>
+
+<h3 id="jekyll-のプロダクト作成">Jekyll のプロダクト作成</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ jekyll new sample.danroo.com
+</code></pre></div></div>
+
+<h3 id="ローカルサーバ起動">ローカルサーバ起動</h3>
+
+<p>起動することで、_site ディレクトリに静的ファイル一式が出力されます。<br />
+github pagesの場合は、pushするだけで表示されます。<br />
+firebaseとherokuの場合は、DocumentRoot を「_site」に設定して、deployすれば表示されます。<br />
+レンタルサーバの場合は、_site配下をアップロードすればOKです。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd ./sample.danroo.com
+$ bundle exec jekyll serve
+</code></pre></div></div>
+
+<h3 id="github-pages-でカスタムドメインを使いたい場合の設定">Github pages でカスタムドメインを使いたい場合の設定</h3>
+
+<p>_siteと同じ階層に、CNAMEファイルを作成し、<br />
+カスタムドメイン名のみ記載して、保存</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sample.danroo.com
+</code></pre></div></div>
+
+<h3 id="本番環境にだけ反映したいタグを設定したい場合googleanalyticsなど">本番環境にだけ反映したいタグを設定したい場合（GoogleAnalyticsなど）</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="err">％</span> <span class="k">if</span> <span class="nx">jekyll</span><span class="p">.</span><span class="nx">environment</span> <span class="o">==</span> <span class="dl">"</span><span class="s2">production</span><span class="dl">"</span> <span class="err">％</span><span class="p">}</span>
+<span class="c">&lt;!--</span> <span class="nx">Global</span> <span class="nx">site</span> <span class="nx">tag</span> <span class="p">(</span><span class="nx">gtag</span><span class="p">.</span><span class="nx">js</span><span class="p">)</span> <span class="o">-</span> <span class="nx">Google</span> <span class="nx">Analytics</span> <span class="o">--&gt;</span>
+<span class="o">&lt;</span><span class="nx">script</span> <span class="k">async</span> <span class="nx">src</span><span class="o">=</span><span class="dl">"</span><span class="s2">https://www.googletagmanager.com/gtag/js?id=UA-00000000-1</span><span class="dl">"</span><span class="o">&gt;&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span><span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
+  <span class="nb">window</span><span class="p">.</span><span class="nx">dataLayer</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">dataLayer</span> <span class="o">||</span> <span class="p">[];</span>
+  <span class="kd">function</span> <span class="nx">gtag</span><span class="p">()</span> <span class="p">{</span> <span class="nx">dataLayer</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">arguments</span><span class="p">);</span> <span class="p">}</span>
+  <span class="nx">gtag</span><span class="p">(</span><span class="dl">'</span><span class="s1">js</span><span class="dl">'</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">());</span>
+  <span class="nx">gtag</span><span class="p">(</span><span class="dl">'</span><span class="s1">config</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">UA-00000000-1</span><span class="dl">'</span><span class="p">);</span>
+<span class="o">&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span><span class="p">{</span><span class="err">％</span> <span class="nx">endif</span> <span class="err">％</span><span class="p">}</span>
+</code></pre></div></div>
+
+<p>envを指定して、build</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ JEKYLL_ENV=production bundle exec jekyll build
+</code></pre></div></div>
+
+</div><div id="disqus_thread" style="margin-top:120px"></div>
+  <script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+     /*
+     var disqus_config = function () {
+     this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+     this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+     };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://blog-danroo-com.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+		</section>
+	</main>
+
+	
+	<!-- Ptengine  -->
+	<script type="text/javascript">
+		window._pt_lt = new Date().getTime();
+		window._pt_sp_2 = [];
+		_pt_sp_2.push("setAccount,6d777cd9");
+		var _protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+		(function () {
+			var atag = document.createElement("script");
+			atag.type = "text/javascript";
+			atag.async = true;
+			atag.src = _protocol + "js.ptengine.jp/6d777cd9.js";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(atag, s);
+		})();
+	</script>
+	<!-- Ptengine  --><script id="dsq-count-scr" src="//blog-danroo-com.disqus.com/count.js" async></script>
+</body>
+
+</html>
